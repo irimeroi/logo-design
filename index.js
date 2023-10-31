@@ -9,10 +9,12 @@ const questions = [
         type: 'input',
         message: 'Please enter text for your logo. (Must not exceed 3 characters)',
         name: 'text',
-        // validate: (text) => {
-        //     text.length <= 3 ||
-        //     "The message must not contain more than 3 characters"
-        // }
+        validate: (answer) => {
+            if (answer.length > 3) {
+                return console.log("Please delete some characters!");
+            }
+            return true;
+        }
     },
     {
         type: 'input',
@@ -26,27 +28,29 @@ const questions = [
     }, {
         type: 'input',
         message: 'Enter a shape color',
-        name: 'shapesColor'
+        name: 'shapeColor'
     }
 ]
 
+//function that generates de SVG logo
 function generateSVG(answers) {
     let shapeChoice = "";
     if (answers.shapes === "Circle") {
-        shapeChoice = new Circle(answers.color, answers.text, answers.textColor);
+        shapeChoice = new Circle(answers.shapeColor, answers.text, answers.textColor);
     } else if (answers.shapes === "Triangle") {
-        shapeChoice = new Triangle(answers.color, answers.text, answers.textColor);
+        shapeChoice = new Triangle(answers.shapeColor, answers.text, answers.textColor);
     } else if (answers.shapes === "Square") {
-        shapeChoice = new Square(answers.color, answers.text, answers.textColor);
+        shapeChoice = new Square(answers.shapeColor, answers.text, answers.textColor);
     }
     return shapeChoice.render();
 }
 
+//function that starts the app and creates the file printing the SVG logo
 function app() {
     inquirer
         .prompt(questions)
         .then((answers) => {
-            fs.writeFile('logo.svg', generateSVG(answers), function (error) {
+            fs.writeFile('examples/logo.svg', generateSVG(answers), function (error) {
                 if (error) { console.log(error) }
                 console.log('Success! Your logo was created!')
             })
